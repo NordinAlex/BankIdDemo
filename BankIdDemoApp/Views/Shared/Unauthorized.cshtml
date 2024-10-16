@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Åtkomst nekad";
+}
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card shadow-sm border-light">
+                <div class="card-header text-center bg-danger text-white">
+                    <h2>Åtkomst nekad</h2>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <p class="lead">Du måste vara verifierad med BankID för att komma åt den här sidan.</p>
+                        <p>För att fortsätta, vänligen verifiera dig med BankID.</p>
+                        <a href="@Url.Action("Login", "Auth")" class="btn btn-primary btn-lg">Logga in med BankID</a>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <small class="text-muted">Om du har problem med BankID, vänligen kontakta support.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

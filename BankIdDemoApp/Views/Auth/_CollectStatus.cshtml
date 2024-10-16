@@ -1,0 +1,131 @@
+﻿@model BankIdDemoApp.DTOs.BankId.Responses.BankIdCollectResponseDto
+
+<div class="status-messages @Model.Status.ToLower()">
+    @if (Model.HintCode == "outstandingTransaction")
+    {
+        <div class="alert alert-primary d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Info:" width="16" height="16">
+                <use xlink:href="#info-fill" />
+            </svg>
+            <div>Väntar på att BankID-appen ska svara...</div>
+        </div>
+    }
+    else if (Model.HintCode == "noClient")
+    {
+        <div class="alert alert-danger d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:" width="16" height="16">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+            <div>BankID-appen kunde inte startas. Starta appen manuellt om den inte redan körs.</div>
+        </div>
+    }
+    else if (Model.HintCode == "started")
+    {
+        <div class="alert alert-success d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:" width="16" height="16">
+                <use xlink:href="#check-circle-fill" />
+            </svg>
+            <div>BankID-appen har startats och väntar på legitimering...</div>
+        </div>
+    }
+    else if (Model.HintCode == "userMrtd")
+    {
+        <div class="alert alert-primary d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Info:" width="16" height="16">
+                <use xlink:href="#info-fill" />
+            </svg>
+            <div>Vänligen följ instruktionerna i BankID-appen för att slutföra legitimeringen.</div>
+        </div>
+    }
+    else if (Model.HintCode == "userSign")
+    {
+        <div class="alert alert-success d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:" width="16" height="16">
+                <use xlink:href="#check-circle-fill" />
+            </svg>
+            <div>Legitimeringen verifierad. Väntar på att användaren ska signera...</div>
+        </div>
+    }
+    else if (Model.HintCode == "expiredTransaction")
+    {
+        <div class="alert alert-danger d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:" width="16" height="16">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+            <div>Tiden har gått ut för denna legitimering. Försök igen.</div>
+        </div>
+    }
+    else if (Model.HintCode == "certificateErr")
+    {
+        <div class="alert alert-danger d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:" width="16" height="16">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+            <div>Ogiltigt BankID. Försök igen eller kontakta support.</div>
+        </div>
+    }
+    else if (Model.HintCode == "userCancel")
+    {
+        <div class="alert alert-warning d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Warning:" width="16" height="16">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+            <div>Du har avbrutit legitimeringen. Försök igen om du vill fortsätta.</div>
+        </div>
+    }
+    else if (Model.HintCode == "cancelled")
+    {
+        <div class="alert alert-danger d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:" width="16" height="16">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+            <div>Legitimeringen har avbrutits av systemet.</div>
+        </div>
+    }
+    else if (Model.HintCode == "startFailed")
+    {
+        <div class="alert alert-danger d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:" width="16" height="16">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+            <div>Kunde inte starta BankID. Kontrollera att du har BankID installerat och försök igen.</div>
+        </div>
+    }
+    else if (Model.HintCode == "userDeclinedCall")
+    {
+        <div class="alert alert-danger d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:" width="16" height="16">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+            <div>Du har indikerat att du inte är i ett samtal med organisationen. Försök igen om detta var ett misstag.</div>
+        </div>
+    }
+    else if (Model.HintCode == "notSupportedByUserApp")
+    {
+        <div class="alert alert-danger d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:" width="16" height="16">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+            <div>Den version av BankID-appen som används stöder inte denna funktion. Uppdatera din app och försök igen.</div>
+        </div>
+    }
+    else if (Model.HintCode == "transactionRiskBlocked")
+    {
+        <div class="alert alert-danger d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:" width="16" height="16">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+            <div>Denna transaktion har blockerats på grund av säkerhetsrisk. Kontakta support för mer information.</div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info d-flex align-items-center">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Info:" width="16" height="16">
+                <use xlink:href="#info-fill" />
+            </svg>
+            <div>Väntar på användaråtgärd...</div>
+        </div>
+    }
+</div>
+
