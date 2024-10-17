@@ -1,20 +1,26 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
+
+    .main-bankid {     
+        margin-top: 100px !important;
+    }
 }
 
+
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
@@ -25,11 +31,7 @@ body {
 
 /* Custom CSS */
 .main-bankid {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    
+    margin-top:40px;
 }
 
 .card {
@@ -90,13 +92,12 @@ body {
 }
 
 
-  /* Spinner-container för centrering */
-  .spinner-container {
+/* Spinner-container för centrering */
+.spinner-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 210px;
-   
 }
 
 /* CSS för att rotera SVG */
@@ -108,22 +109,22 @@ body {
     /* Roterar spinnaren kontinuerligt */
 }
 
-/* Cirkeln inom SVG */
-.spinner circle {
-    fill: #99bed04b;
-    stroke: url(#gradient);
-    /* Använd gradient för kantlinjen */
-    stroke-width: 5;
-    /* Bredd på kantlinjen */
-    stroke-dasharray: 100;
-    /* Längden av omkretsen (ca 2 * π * 25) */
-    stroke-dashoffset:10;
-    /* Starta utan förskjutning */
-    stroke-linecap: round;
-    /* Rundade ändar på linjen */
-    animation: dash 1.5s step-start infinite;
-    /* Skapar en effekt av att linjen ritas fram */
-}
+    /* Cirkeln inom SVG */
+    .spinner circle {
+        fill: #99bed04b;
+        stroke: url(#gradient);
+        /* Använd gradient för kantlinjen */
+        stroke-width: 5;
+        /* Bredd på kantlinjen */
+        stroke-dasharray: 100;
+        /* Längden av omkretsen (ca 2 * π * 25) */
+        stroke-dashoffset: 10;
+        /* Starta utan förskjutning */
+        stroke-linecap: round;
+        /* Rundade ändar på linjen */
+        animation: dash 1.5s step-start infinite;
+        /* Skapar en effekt av att linjen ritas fram */
+    }
 
 .stop1 {
     stop-color: #193e4f;
@@ -148,6 +149,5 @@ body {
 .btn-container {
     padding: 0.8rem 1.6rem;
     margin-bottom: 1rem;
-    
     border: 1px solid #C5B0D0;
 }

@@ -4,7 +4,7 @@
     ViewData["Title"] = "BankID Autentisering";
 }
 
-<div class="main-bankid" role="main">
+<div class="container d-flex justify-content-center align-items-center main-bankid" role="main">
     <div class="card">
         <div class="inner">
             <div class="info">
@@ -44,6 +44,11 @@
 
                 <div class="actions">
                     <button class="btn btn-secondary" onclick="window.location.href='@Url.Action("Index", "Home")'">Avbryt</button>
+                    @if (Model.LaunchingType == "BankIDAutostart" && !string.IsNullOrEmpty(Model.AutoStartToken))
+                    {
+                    <button class="btn btn-primary" onclick="autoStartBankId()">Öppna BankID-appen</button>                    
+                    }
+                  
                 </div>
             </div>
         </div>
@@ -89,26 +94,24 @@
     function autoStartBankId() {
        
 
-        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        if (navigator.userAgent.match(/(iPhone|iPad|iPod)/g )) {
             // iOS: Använd Universal Link
             var url = `https://app.bankid.com/?autostarttoken=${autoStartToken}&redirect=${encodeURIComponent(returnUrl)}`;
             window.location.href = url;
-        } else if (/Android/i.test(navigator.userAgent)) {
+        } else if (navigator.userAgent.match(/(Android)/g)) {
             // Android: Försök att öppna BankID-appen med URL
-            var url = `https://app.bankid.com/?autostarttoken=${autoStartToken}&redirect=${encodeURIComponent(returnUrlNull)}`;
-            var fallbackUrl = `https://play.google.com/store/apps/details?id=com.bankid.bus`; // Fallback-URL för att öppna Google Play om appen inte finns installerad.
+            // Om browser är chrome så öppnas inte appen utan en länk till appen visas
+            if (navigator.userAgent.match(/(Chrome)/g)) {
+                document.getElementById('collect-status').innerHTML = "<div class='message-text alert alert-info'>Öppna BankID-appen manuellt och verifiera dig.</div>";
+                window.location.href = `bankid:///?autostarttoken=${autoStartToken}&redirect=${encodeURIComponent(returnUrlNull)}`;
 
-            // Försök att öppna BankID-appen, annars öppna Play Store efter en kort fördröjning
-            var timeout = setTimeout(function () {
-                window.location.href = fallbackUrl;
-            }, 2000);
+            }
+            else {
+                window.location.href = `bankid:///?autostarttoken=${autoStartToken}&redirect=${encodeURIComponent(returnUrlNull)}`;
+            }
 
-            window.location.href = url;
 
-            // Stoppa om BankID öppnas inom 2 sekunder (när sidan får fokus)
-            window.onfocus = function () {
-                clearTimeout(timeout);
-            };
+          
         } else {
             // För desktop-enheter
             window.location.href = `bankid:///?autostarttoken=${autoStartToken}&redirect=${encodeURIComponent(returnUrlNull)}`;
