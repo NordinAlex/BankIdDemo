@@ -80,7 +80,7 @@ public class BankIdService : IBankIdService
 
             if (!response.IsSuccessStatusCode)
             {
-                await HandleErrorResponse(response);
+                return;
             }
         }
         catch (Exception ex)

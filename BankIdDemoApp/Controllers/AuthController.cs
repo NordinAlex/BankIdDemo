@@ -13,7 +13,7 @@ public class AuthController(IBankIdAuthService bankIdAuthService, ISessionServic
     private readonly IQrCodeService _qrCodeService = qrCodeService;
     private readonly ILogger<AuthController> _logger = logger;
 
-    [HttpGet]
+
     public IActionResult Login()
     {
         return View();
@@ -42,7 +42,8 @@ public class AuthController(IBankIdAuthService bankIdAuthService, ISessionServic
             {
                 AutoStartToken = response.AutoStartToken,
                 LaunchingType = launchingType,
-                ReturnUrl = Url.Action("Index", "MinaSidor", null, Request.Scheme)
+                ReturnUrl = Url.Action("Index", "MinaSidor", null, Request.Scheme),
+                
             };
 
             if (launchingType == "BankIDQrCode")
@@ -93,6 +94,7 @@ public class AuthController(IBankIdAuthService bankIdAuthService, ISessionServic
             }
 
             var collectData = await _bankIdAuthService.CollectStatusAsync(orderRef);
+          
 
             if (collectData == null)
             {
@@ -106,15 +108,15 @@ public class AuthController(IBankIdAuthService bankIdAuthService, ISessionServic
                     WriteIndented = true
                 });
                 _sessionService.StoreCompletionData(completionDataJson);
-                return Ok(new { status = "complete" });
+                return Ok(new { status = "complete", collectData.HintCode });
             }
             else if (collectData.Status == "pending")
             {
                 var partialViewHtml = await this.RenderViewAsync("_CollectStatus", collectData, true);
-                return Ok(new { status = "pending", partialViewHtml });
+                return Ok(new { status = "pending", collectData.HintCode, partialViewHtml });
             }
             else if (collectData.Status == "failed")
-            {                
+            {
                 var partialViewHtml = await this.RenderViewAsync("_CollectStatus", collectData, true);
                 return Ok(new { status = "failed", partialViewHtml });
             }
@@ -128,5 +130,25 @@ public class AuthController(IBankIdAuthService bankIdAuthService, ISessionServic
         }
     }
 
-}
+    [HttpPost]
+    public async Task<IActionResult> Cancel()
+    {
+        try
+        {
+            var orderRef = _sessionService.GetOrderRef();
+            if (string.IsNullOrEmpty(orderRef))
+            {
+                return BadRequest(new { status = "error", message = "OrderRef saknas." });
+            }
 
+            await _bankIdAuthService.CancelAsync(orderRef);
+            return Ok(new { status = "success" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Ett fel inträffade i Cancel: {ex.Message}");
+            return StatusCode(500, new { status = "error", message = "Ett internt fel inträffade. Vänligen försök igen senare." });
+        }
+    }
+
+}

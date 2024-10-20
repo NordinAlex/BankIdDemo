@@ -7,6 +7,7 @@ public interface IBankIdAuthService
 {
     Task<BankIdAuthResponseDto> AuthenticateUserAsync(string endUserIp, string launchingType);
     Task<BankIdCollectResponseDto> CollectStatusAsync(string orderRef);
+    Task CancelAsync(string orderRef);
 }
 
 public class BankIdAuthService : IBankIdAuthService
@@ -41,5 +42,10 @@ public class BankIdAuthService : IBankIdAuthService
     public async Task<BankIdCollectResponseDto> CollectStatusAsync(string orderRef)
     {
         return await _bankIdService.CollectAsync(orderRef);
+    }
+
+    public async Task CancelAsync(string orderRef)
+    {
+        await _bankIdService.CancelAsync(orderRef);
     }
 }

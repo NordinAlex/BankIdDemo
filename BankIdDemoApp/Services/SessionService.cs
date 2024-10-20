@@ -1,6 +1,4 @@
 ﻿using BankIdDemoApp.Models.BankId;
-using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BankIdDemoApp.Services;
 
