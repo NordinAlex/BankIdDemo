@@ -2,6 +2,7 @@
 
 Detta projekt visar ett exempel på BankID-autentisering med både QR-kod och BankID-autostart. Projektet är byggt med ASP.NET Core MVC 8.
 
+![BankID Demo](./docs/BankIdDemo.png)
 ## Funktioner
 
 - **BankID API version v6.0**
