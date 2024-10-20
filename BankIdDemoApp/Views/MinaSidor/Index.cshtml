@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Mina Sidor - BankID Resultat";
+    var jsonData = ViewBag.JsonData as string;
+}
+
+<h1>Verifieringsresultat</h1>
+
+@if (!string.IsNullOrEmpty(jsonData))
+{
+    <pre>
+        @jsonData
+            </pre>
+}
+else
+{
+    <p>Ingen verifieringsdata hittades.</p>
+}

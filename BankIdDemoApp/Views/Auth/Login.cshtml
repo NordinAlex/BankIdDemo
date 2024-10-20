@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Logga in till Mina sidor";
+}
+
+<div class="container d-flex justify-content-center align-items-center main-bankid">
+    <div class="row">
+        <div class="card shadow-lg">
+            <div class="inner">
+                <!-- Logo och Titel -->
+                <div class="info-header text-center mt-4">
+                    <img alt="BankID logo" class="info-icon-header" src="~/images/logo/BankID_logo.svg" />
+                </div>
+                <div class="info-content text-center" tabindex="-1">
+                    <h2 class="info-title">Välj BankID legitimering</h2>
+                    <p class="info-text" id="info-text">Välj hur du vill legitimeras med BankID.</p>
+
+                    <!-- Visa eventuella felmeddelanden -->
+                    @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+                    {
+                        <div class="alert alert-danger mt-3" aria-live="polite">
+                            <img alt="Varning" class="ico-warn" src="/authenticate/res/UI3/img/logo/warning.svg" />
+                            @ViewData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <!-- Alternativ för att starta BankID -->
+                    <div class="signin mt-4">
+                        <div class="actions step-starting">
+                            <!-- BankID på denna enhet -->
+                            <form asp-action="Authenticate" method="post" class="form-signin">
+                                <input type="hidden" name="endUserIp" value="@Context.Connection.RemoteIpAddress?.ToString()" />
+                                <input type="hidden" name="launchingType" value="BankIDAutostart" />
+                                <button type="submit" class="btn btn-primary btn-block btn-lg mb-3 btn-container">
+                                    <span class="text-line">BankID på denna enhet</span>
+                                </button>
+                            </form>
+
+                            <!-- BankID med QR-kod -->
+                            <form asp-action="Authenticate" method="post" class="form-signin">
+                                <input type="hidden" name="endUserIp" value="@Context.Connection.RemoteIpAddress?.ToString()" />
+                                <input type="hidden" name="launchingType" value="BankIDQrCode" />
+                                <button type="submit" class="btn btn-primary btn-block btn-lg mb-5 btn-container">
+                                    <span class="text-line">BankID med QR-kod </span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

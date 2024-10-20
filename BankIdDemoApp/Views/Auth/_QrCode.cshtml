@@ -1,0 +1,9 @@
+﻿@model BankIdDemoApp.ViewModels.BankIdAuthViewModel
+
+@if (!string.IsNullOrEmpty(Model.QrCodeBase64))
+{
+    <p class="info-text">Starta BankID-appen på din mobila enhet och läs av QR-koden.</p>
+    <div id="qr-container">
+        <img id="qr-code" src="data:image/png;base64,@Model.QrCodeBase64" alt="BankID QR-kod" style="width: 200px; height: 200px;" />
+    </div>
+}

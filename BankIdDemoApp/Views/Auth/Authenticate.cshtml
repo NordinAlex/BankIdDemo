@@ -1,0 +1,180 @@
+﻿@model BankIdDemoApp.ViewModels.BankIdAuthViewModel
+
+@{
+    ViewData["Title"] = "BankID Autentisering";
+}
+
+<div class="container d-flex justify-content-center align-items-center main-bankid" role="main">
+    <div class="card">
+        <div class="inner">
+            <div class="info">
+                <div class="info-header">
+                    <img alt="BankID" class="info-icon-header" src="/images/logo/BankID_logo.svg">
+                </div>
+                <div class="info-content" tabindex="-1">
+                    <h2 class="info-title">BankID Autentisering</h2>
+
+                    @if (Model.LaunchingType == "BankIDQrCode")
+                    {
+                        <div id="status-container" style="display:block;">                          
+                            @await Html.PartialAsync("_QrCode", Model)
+                        </div>
+                        <div id="spinner-container" style="display:none;">
+                            @await Html.PartialAsync("_AutoStart", Model)
+                        </div>
+                    }
+
+                    else if (Model.LaunchingType == "BankIDAutostart")
+                    {
+                        @await Html.PartialAsync("_AutoStart", Model)
+                    }
+                </div>
+
+                <div id="collect-status" class="message-container" aria-live="polite"></div>
+
+                <div class="actions">
+                    <button class="btn btn-primary m-1" onclick="cancelBankId()">Avbryt</button>
+                    @if (Model.LaunchingType == "BankIDAutostart")
+                    {
+                        <button class="btn btn-primary m-1" onclick="startBankId()">Öppna BankID-appen</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    var autoStartToken = "@Model.AutoStartToken";
+    var returnUrl = "@Model.ReturnUrl";
+    var launchingType = "@Model.LaunchingType";
+    var returnUrlNull = null;
+    let startTime = Date.now();
+    let maxTime = 35000; // 35 sekunder som standard
+
+    async function fetchData(url, method = 'POST', body = null) {
+        const options = {
+            method: method,
+            headers: { 'Content-Type': 'application/json' }
+        };
+        if (body) options.body = JSON.stringify(body);
+
+        try {
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error(`Error fetching data from ${url}:`, error);
+            throw error;
+        }
+    }
+
+    async function updateQrCode() {
+        const currentTime = Date.now();
+        const elapsedTime = currentTime - startTime;
+        // Om vi har nått max tid, avbryt update
+        if (elapsedTime >= maxTime) {
+            console.log("Max tid nådd, avbryter polling.");
+            return;
+        }
+        try {
+
+            const data = await fetchData('@Url.Action("UpdateQrCode", "Auth")');
+            if (data.qrCodeBase64) {
+                document.getElementById('qr-code').src = `data:image/png;base64,${data.qrCodeBase64}`;
+            }
+        } catch (error) {
+            console.error('Error updating QR code:', error);
+        }
+        // Uppdatera QR-koden var 1000 ms (1 sekund).
+        setTimeout(updateQrCode, 1000);
+    }
+
+
+    async function pollStatus() {
+        try {
+            const currentTime = Date.now();
+            const elapsedTime = currentTime - startTime;
+            // Om vi har nått max tid, avbryt polling
+            if (elapsedTime >= maxTime) {
+                console.log("Max tid nådd, avbryter polling.");
+                return;
+            }
+
+            const data = await fetchData('@Url.Action("CollectStatus", "Auth")', 'POST');
+            const collectStatusElement = document.getElementById('collect-status');
+            const qRContainer = document.getElementById('status-container');
+            const spinner = document.getElementById('spinner-container');
+
+            console.log(data.hintCode);
+            console.log(data);
+
+            if (data.partialViewHtml) {
+                collectStatusElement.innerHTML = data.partialViewHtml;
+            }
+
+            if (data.status === "complete") {
+                collectStatusElement.innerHTML = "<div class='message-text alert alert-success'>Verifiering klar! Omdirigerar till Mina Sidor...</div>";
+                setTimeout(() => window.location.href = returnUrl, 2000);
+            } else if (data.status === "pending") {
+                setTimeout(pollStatus, 2000)
+                if (data.hintCode && data.hintCode === "userSign" && launchingType === "BankIDQrCode") {
+                    qRContainer.style.display = 'none'; // Dölj QR-container
+                    spinner.style.display = 'block'; // Visa spinnern
+                }
+            }
+        } catch (error) {
+            console.log('Error polling status:', error);
+            document.getElementById('collect-status').innerHTML = "<div class='message-text alert alert-danger'>Ett fel uppstod. Försök igen senare.</div>";
+        }
+    }
+
+
+
+    function cancelBankId() {
+        fetchData('@Url.Action("Cancel", "Auth")', 'POST')
+            .then(() => window.location.href = '@Url.Action("Index", "Home")')
+    }
+
+
+    
+    function autoStartBankId() {
+
+        try {
+            if (navigator.userAgent.match(/(iPhone|iPad|iPod)/g)) {
+                var url = `https://app.bankid.com/?autostarttoken=${autoStartToken}&redirect=${encodeURIComponent(returnUrlNull)}`;
+                window.location.href = url;
+            } else if (navigator.userAgent.match(/(Android)/g)) {
+                console.log("Android");
+                var deepLinkIntent = `bankid:///?autostarttoken=${autoStartToken}&redirect=${encodeURIComponent(returnUrlNull)}`;
+                //window.location.href = deepLinkIntent; 
+               
+            }else {
+                // För desktop-enheter
+                window.location.href = `bankid:///?autostarttoken=${autoStartToken}&redirect=${encodeURIComponent(returnUrlNull)}`;
+            }
+        } catch (error) {
+            console.error('Error starting BankID:', error);
+        }
+    }
+    function startBankId() {
+        window.location.href = `bankid:///?autostarttoken=${autoStartToken}&redirect=${encodeURIComponent(returnUrlNull)}`;
+    }
+
+    window.onload = function () {
+        if (launchingType === "BankIDQrCode") {
+            updateQrCode();
+        } else if (launchingType === "BankIDAutostart" && autoStartToken) {
+
+            autoStartBankId()
+        }
+        pollStatus();
+    };
+
+</script>
+
+

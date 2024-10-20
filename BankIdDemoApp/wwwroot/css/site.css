@@ -1,22 +1,160 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
+
+    .main-bankid {     
+        margin-top: 100px !important;
+    }
 }
 
+
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: #f1f4f9;
+}
+
+
+/* Custom CSS */
+.main-bankid {
+    margin-top:40px;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+.inner {
+    padding: 20px;
+}
+
+.info-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.info-icon-header {
+    height: 90px;
+    width: 90px;
+}
+
+.info-content {
+    text-align: center;
+}
+
+.info-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.info-text {
+    font-size: 1em;
+    margin-bottom: 20px;
+}
+
+#qr-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.message-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.message-text {
+    font-size: 1em;
+    color: #333;
+}
+
+.actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+
+/* Spinner-container för centrering */
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 210px;
+}
+
+/* CSS för att rotera SVG */
+.spinner {
+    width: 200px;
+    /* Storlek på spinnaren */
+    height: 200px;
+    animation: rotate 2s linear infinite;
+    /* Roterar spinnaren kontinuerligt */
+}
+
+    /* Cirkeln inom SVG */
+    .spinner circle {
+        fill: #99bed04b;
+        stroke: url(#gradient);
+        /* Använd gradient för kantlinjen */
+        stroke-width: 5;
+        /* Bredd på kantlinjen */
+        stroke-dasharray: 100;
+        /* Längden av omkretsen (ca 2 * π * 25) */
+        stroke-dashoffset: 10;
+        /* Starta utan förskjutning */
+        stroke-linecap: round;
+        /* Rundade ändar på linjen */
+        animation: dash 1.5s step-start infinite;
+        /* Skapar en effekt av att linjen ritas fram */
+    }
+
+.stop1 {
+    stop-color: #193e4f;
+    /* Färg på starten av gradienten */
+}
+
+.stop2 {
+    stop-color: rgb(34, 218, 224);
+    /* Färg på slutet av gradienten */
+}
+
+/* Roterar hela spinnaren */
+@keyframes rotate {
+
+    100% {
+        transform: rotate(350deg);
+    }
+}
+
+
+
+.btn-container {
+    padding: 0.8rem 1.6rem;
+    margin-bottom: 1rem;
+    border: 1px solid #C5B0D0;
+}
+
+
+
+.bankId-status-icons {
+    display: none;
+    height:100px;
 }
